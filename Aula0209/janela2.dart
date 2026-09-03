@@ -10,7 +10,8 @@ class Janela2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Pergunta teste1 = questoes[2];
-    teste1.embaralha();
+
+    final respostasEmbaralhadas = teste1.embaralha();
 
     return Scaffold(
       body: Column(
@@ -28,12 +29,12 @@ class Janela2 extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          ...teste1.respostas.map((resposta) {
+          ...respostasEmbaralhadas.map((resposta) {
             return Column(
               children: [
                 NovoBotao(
                   chamada: () {
-                    if (resposta == teste1.respostas[1]) {
+                    if (resposta == teste1.respostas[0]) {
                       print('Acertou!');
                     } else {
                       print('Errou!');
