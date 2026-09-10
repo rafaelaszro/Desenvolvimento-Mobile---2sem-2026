@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'frase_controle.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const Janela());
@@ -32,8 +33,12 @@ class _PrincipalState extends State<Principal> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(controle.fraseAtual.texto, ),
-        Text(controle.fraseAtual.autor,),
+        Text(controle.fraseAtual.texto,
+          style: GoogleFonts.montserrat(fontSize: 28,),
+        ),
+        Text(controle.fraseAtual.autor,
+          style: GoogleFonts.msMadi(fontSize: 18,),
+        ),
         IconButton(
           onPressed: () {
             setState(() {
