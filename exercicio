@@ -1,0 +1,169 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const Inicio(),
+    );
+  }
+}
+
+class Inicio extends StatefulWidget {
+  const Inicio({super.key});
+
+  @override
+  State<Inicio> createState() => _InicioState();
+}
+
+class _InicioState extends State<Inicio> {
+  final imagens = [
+    'imagens/jupiter.jpg',
+    'imagens/saturno.jpg',
+    'imagens/terra.jpg',
+  ];
+
+  final aprovadas = <String>[];
+
+  Future<void> avaliarImagem(String imagem) async {
+    final resultado = await Navigator.push(
+      context,
+      MaterialPageRoute<bool>(
+        builder: (context) => Avaliar(imagem),
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (resultado == true) {
+      setState(() {
+        aprovadas.add(imagem);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Imagens'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.photo),
+                text: 'Todas',
+              ),
+              Tab(
+                icon: Icon(Icons.check),
+                text: 'Aprovadas',
+              ),
+            ],
+          ),
+        ),
+
+        body: TabBarView(
+          children: [
+            GridView.count(
+              crossAxisCount: 2,
+              children: [
+                ...imagens.map((imagem) {
+                  return GestureDetector(
+                    onTap: () {
+                      avaliarImagem(imagem);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Image.asset(
+                        imagem,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+
+            aprovadas.isEmpty
+                ? const Center(
+                    child: Text(
+                      'Nenhuma imagem aprovada',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  )
+                : GridView.count(
+                    crossAxisCount: 2,
+                    children: [
+                      ...aprovadas.map((imagem) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Image.asset(
+                            imagem,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Avaliar extends StatelessWidget {
+  const Avaliar(
+    this.imagem, {
+    super.key,
+  });
+
+  final String imagem;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Avaliar imagem'),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Image.asset(
+              imagem,
+              fit: BoxFit.contain,
+            ),
+          ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                child: const Text('Aprovar'),
+              ),
+
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                child: const Text('Reprovar'),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+}
