@@ -26,19 +26,16 @@ class _MyAppState extends State<MyApp> {
     lerTexto();
   }
 
-  // Acessa a pasta de documentos do aplicativo
   Future<String> get _pastaDocumentos async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
 
-  // Cria a referência ao arquivo organiza.md
   Future<File> get _arquivo async {
     final caminho = await _pastaDocumentos;
     return File('$caminho/organiza.md');
   }
 
-  // Salva o texto no arquivo Markdown
   Future<void> salvarTexto() async {
     try {
       final arquivo = await _arquivo;
@@ -53,7 +50,6 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // Lê o texto salvo anteriormente
   Future<void> lerTexto() async {
     try {
       final arquivo = await _arquivo;
@@ -73,7 +69,6 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // Apaga o arquivo e limpa o campo de texto
   Future<void> apagarTexto() async {
     try {
       final arquivo = await _arquivo;
@@ -95,7 +90,6 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  // Mostra mensagens na tela
   void mostrarMensagem(String mensagem) {
     messengerKey.currentState?.showSnackBar(
       SnackBar(
