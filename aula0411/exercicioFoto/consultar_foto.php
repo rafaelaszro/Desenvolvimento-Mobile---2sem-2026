@@ -5,13 +5,31 @@ header("Content-Type: application/json; charset=UTF-8");
 
 require_once "conexao.php";
 
-$sql = "SELECT id, arquivo FROM fotos ORDER BY id DESC";
+$id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
+
+if ($id === false || $id === null || $id < 0) {
+    http_response_code(400);
+    echo json_encode(["erro" => "ID inválido"]);
+    exit;
+}
+
+$sql = "SELECT id, arquivo, descricao
+        FROM fotos
+        WHERE id > :id
+        ORDER BY id ASC
+        LIMIT 1";
 
 $comando = $conexao->prepare($sql);
+$comando->bindValue(":id", $id, PDO::PARAM_INT);
 $comando->execute();
 
-$resultado = $comando->fetchAll(PDO::FETCH_ASSOC);
+$resultado = $comando->fetch(PDO::FETCH_ASSOC);
 
-echo json_encode($resultado);
+if ($resultado) {
+    $resultado["id"] = (int) $resultado["id"];
+    echo json_encode($resultado);
+} else {
+    echo json_encode(["mensagem" => "Não há mais fotos"]);
+}
 
 ?>
